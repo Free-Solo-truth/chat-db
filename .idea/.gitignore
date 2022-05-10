@@ -1,5 +1,10 @@
 # Default ignored files
+<<<<<<< HEAD
 /workspace.xml
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+=======
+/shelf/
+/workspace.xml
+>>>>>>> c5f3524e6cf1df2faa770f823879e25312c5efc4
