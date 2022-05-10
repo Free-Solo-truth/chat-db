@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="chatroom:jar4">
+    <output-path>$PROJECT_DIR$/classes/artifacts/chatroom_jar4</output-path>
+    <root id="root">
+      <element id="archive" name="chatroom.jar">
+        <element id="module-output" name="chatroom" />
+        <element id="dir-copy" path="$PROJECT_DIR$" />
+      </element>
+      <element id="library" level="project" name="KotlinJavaRuntime" />
+      <element id="library" level="application_server_libraries" name="Tomcat 9.0.43" />
+      <element id="file-copy" path="$PROJECT_DIR$/../chatserver1/target/chatserver/WEB-INF/lib/mysql-connector-java-5.1.44.jar" />
+    </root>
+  </artifact>
+</component>
