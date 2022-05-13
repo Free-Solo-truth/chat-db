@@ -11,14 +11,28 @@ public class MsgData implements Serializable{
     private String receiveName;
     private String content;
     private int what;
+    private int type;
     
     public MsgData(String sendName, String receiveName, String content,int type,int what) {
         this.sendName = sendName;
         this.receiveName = receiveName;
         this.content = content;
+        this.type = type;
         this.what = what;
     }
-    
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setReceiveName(String receiveName) {
+        this.receiveName = receiveName;
+    }
+
     public int getWhat() {
         return what;
     }
