@@ -12,10 +12,11 @@ import java.util.Scanner;
 import com.example.foodrecipes.model.*;
 import com.wsl.mychat.MyConnection;
 import com.wsl.mychat.MyObjectOutputStream;
+import com.wsl.mychat.ObjectStream;
 
 
 public class Server {
-	/*Í¨¹ıid´æ´¢ÏàÓ¦µÄsocketÁ¬½Ó£¬ÓÃÀ´ºóĞøµÄ¶Ô¶ÔÓ¦µÄsocketÁ¬½ÓµÄ²Ù×÷*/
+	/*é€šè¿‡idå­˜å‚¨ç›¸åº”çš„socketè¿æ¥ï¼Œç”¨æ¥åç»­çš„å¯¹å¯¹åº”çš„socketè¿æ¥çš„æ“ä½œ*/
     static HashMap<String, Socket>clientlist=new HashMap<>();
     static String username = new String();
 
@@ -24,24 +25,24 @@ public class Server {
     static ServerSocket serverSocket = null;
     public Server() {
         try {
-            serverSocket = new ServerSocket(8881);
+            serverSocket = new ServerSocket(8888);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     public static void main(String[] args) throws IOException {
         Scanner input = new Scanner(System.in);
-        System.out.println("************·şÎñ¶Ë*************");
+        System.out.println("************æœåŠ¡ç«¯*************");
         Server t = new Server();
         int count = 0;
         while (true) {
             try {
-//              System.out.println("¶Ë¿Ú8000µÈ´ı±»Á¬½Ó......");
+//              System.out.println("ç«¯å£8000ç­‰å¾…è¢«è¿æ¥......");
 
                 socket = serverSocket.accept();
                 socket.setSoTimeout(1000000);
                 count++;
-                System.out.println("µÚ" + count + "¸ö¿Í»§ÒÑÁ¬½Ó");
+                System.out.println("ç¬¬" + count + "ä¸ªå®¢æˆ·å·²è¿æ¥");
 				 ins=new ObjectInputStream(socket.getInputStream());
 				System.out.print("Success1");
 			} catch (IOException e) {
@@ -59,7 +60,7 @@ public class Server {
     private Socket socket;
 	 ObjectInputStream ins;
     private boolean first=true;
-    public Print(Socket s,ObjectInputStream ins) {// ¹¹Ôì·½·¨
+    public Print(Socket s,ObjectInputStream ins) {// æ„é€ æ–¹æ³•
         try {
         	this.ins = ins;
             socket=s;
@@ -79,11 +80,12 @@ public class Server {
 //			ObjectInputStream ins=new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 			System.out.print("Success");
 
-			/*ÕâÀï¿ÉÒÔÉèÖÃ¶¨Ê±¹Ø±ÕsocketµÄÊä³öÁ÷*/
+			/*è¿™é‡Œå¯ä»¥è®¾ç½®å®šæ—¶å…³é—­socketçš„è¾“å‡ºæµ*/
 					while (true) {
 						Object ob=null;
-						while((ob=ins.readObject())!=null) {
-							if (ob instanceof MsgData) {/*¶ÁÈ¡µÄ¶ÔÏóÊÇMsgDataÀàĞÍ*/
+						while((ob = ins.readObject())!=null) {
+
+							if (ob instanceof MsgData) {/*è¯»å–çš„å¯¹è±¡æ˜¯MsgDataç±»å‹*/
 
 								System.out.print(ob.toString());
 //					private static final long serialVersionUID = 1L;
@@ -91,119 +93,128 @@ public class Server {
 								System.out.print(msg.getSendName());
 								Server.username = msg.getSendName();
 								if (Server.clientlist.get(msg.getSendName()) != null) {
-									System.out.println(msg.getSendName() + "Á¬½ÓÒÑ¾­´æÔÚ");
+									System.out.println(msg.getSendName() + "è¿æ¥å·²ç»å­˜åœ¨");
 								} else {
 									Server.clientlist.put(msg.getSendName(), socket);
 								}
-								// ÏûÏ¢ÀàĞÍÎª1£¬ÓÃ»§Í¨Ñ¶ÏûÏ¢
+								// æ¶ˆæ¯ç±»å‹ä¸º1ï¼Œç”¨æˆ·é€šè®¯æ¶ˆæ¯
 								if (msg.getWhat() == 1) {
+									MyConnection con = new MyConnection();
 									System.out.print("Success1");
-									/*»ñÈ¡¶ÔÓ¦µÄsocketÁ¬½Ó*/
-									if (Server.clientlist.get(msg.getReceiveName()) != null) {
-										if (first) {
-											System.out.println(msg.getSendName() + "¶Ô" + msg.getReceiveName() + "Ëµ" + msg.getContent());
-											/*ÏûÏ¢µÄ×ª·¢£¬×ª·¢µÄ¶ÔÏóÊÇ±£´æÔÚclientlistÆäÖĞµÄÒ»Ô±£¬Á¬½Ó³É¹¦Ö®ºó¾Í»á±£´æÔÚÆäÖĞ*/
-											ObjectOutputStream ous = new ObjectOutputStream(Server.clientlist.get(msg.getReceiveName()).getOutputStream());
-											ous.writeObject(msg);
+										if(msg.getType()==3){
+										/*è·å–å¯¹åº”çš„socketè¿æ¥*/
+										ObjectOutputStream sendBack = new ObjectOutputStream(Server.clientlist.get(msg.getSendName()).getOutputStream());
+
+										MsgData message = con.querynews(msg.getSendName(),msg.getReceiveName());
+										sendBack.writeObject(message);
+										sendBack.flush();
+										System.out.println("å‘é€æˆåŠŸ");
+									}
+									 if (Server.clientlist.get(msg.getReceiveName()) != null&&msg.getType()==1) {
+										if (true) {
+											System.out.println(msg.getSendName() + "å¯¹" + msg.getReceiveName() + "è¯´" + msg.getContent());
+											/*æ¶ˆæ¯çš„è½¬å‘ï¼Œè½¬å‘çš„å¯¹è±¡æ˜¯ä¿å­˜åœ¨clientlistå…¶ä¸­çš„ä¸€å‘˜ï¼Œè¿æ¥æˆåŠŸä¹‹åå°±ä¼šä¿å­˜åœ¨å…¶ä¸­*/
+											/*è·å–å¯¹åº”çš„socketè¿æ¥*/
+											/*å–æ¶ˆç¬¬äºŒæ¬¡ä¼ é€’æ•°æ®çš„æ–‡ä»¶å¤´*/
+											ObjectOutputStream ous = new ObjectStream(Server.clientlist.get(msg.getReceiveName()).getOutputStream());
+											ous.writeObject(new MsgData(msg.getSendName(),msg.getReceiveName(),msg.getContent(),0,1));
 											ous.flush();
-											System.out.println("·¢ËÍ³É¹¦");
-											first = false;
-										} else {
-											System.out.println(msg.getSendName() + "¶Ô" + msg.getReceiveName() + "Ëµ" + msg.getContent());
-											MyObjectOutputStream ous = new MyObjectOutputStream(Server.clientlist.get(msg.getReceiveName()).getOutputStream());
-											ous.writeObject(msg);
-											ous.flush();
-											System.out.println("·¢ËÍ³É¹¦");
+											System.out.println("å‘é€èŠå¤©æ¶ˆæ¯");
+											con.insertnews(msg.getSendName(),msg.getReceiveName(),msg.getContent());
+//											first = false;
 										}
-									} else {
-										System.out.println(msg.getSendName() + "¶Ô" + msg.getReceiveName() + "Ëµ" + msg.getContent());
-										//´æÈëÊı¾İ¿â....
-										System.out.println("¸ÃÓÃ»§²»ÔÚÏß");
+									}
+									 if(Server.clientlist.get(msg.getReceiveName()) == null){
+										 ObjectOutputStream ous = new ObjectStream(Server.clientlist.get(msg.getSendName()).getOutputStream());
+										 con.insertnews(msg.getSendName(),msg.getReceiveName(),msg.getContent());
+										ous.writeObject(new MsgData(msg.getSendName(),msg.getReceiveName(),"è¯¥ç”¨æˆ·ä¸åœ¨çº¿",2,1));
+										ous.flush();
+										System.out.println("è¯¥ç”¨æˆ·ä¸åœ¨çº¿");
 									}
 								}
-								// ÏûÏ¢ÀàĞÍÎª2 ÓÃ»§µÇÂ¼ÏûÏ¢ Éí·İÑéÖ¤
+								// æ¶ˆæ¯ç±»å‹ä¸º2 ç”¨æˆ·ç™»å½•æ¶ˆæ¯ èº«ä»½éªŒè¯
 								else if (msg.getWhat() == 2) {
 									MyConnection con = new MyConnection();
-									/*²éÑ¯Êı¾İ¿â»ñÈ¡ÓÃ»§µÄĞÅÏ¢Í¨¹ı´«ËÍµÄĞÅÏ¢µÄName*/
-									UserData user = con.getuser(msg.getSendName());/*ÄÃÈ¡ÓÊÏä*/
+									/*æŸ¥è¯¢æ•°æ®åº“è·å–ç”¨æˆ·çš„ä¿¡æ¯é€šè¿‡ä¼ é€çš„ä¿¡æ¯çš„Name*/
+									UserData user = con.getuser(msg.getSendName());/*æ‹¿å–é‚®ç®±*/
 									if (user == null) {
-										MsgData msg0 = new MsgData("", "", "ÓÃ»§²»´æÔÚ", 0, 0);
+										MsgData msg0 = new MsgData("", "", "ç”¨æˆ·ä¸å­˜åœ¨", 0, 0);
 										msg0.setWhat(2);
 										ObjectOutputStream ous = new ObjectOutputStream(Server.clientlist.get(msg.getSendName()).getOutputStream());
-										/*·µ»Ø²Ù×÷ĞÅÏ¢*/
+										/*è¿”å›æ“ä½œä¿¡æ¯*/
 										ous.writeObject(msg0);
 										ous.flush();
-										System.out.println("ÓÃ»§µÇÂ¼Ê§°Ü");
+										System.out.println("ç”¨æˆ·ç™»å½•å¤±è´¥");
 									} else {
-										//¼ìÑéµÇÂ¼ÃÜÂëÊÇ·ñÕıÈ· msg.getContent()ÎªÃÜÂë×Ö¶Î
-										if (user.getPassword().equals(msg.getContent())) {/*ÄÃÈ¡ÃÜÂë*/
-											MsgData msg0 = new MsgData("", "", "µÇÂ¼³É¹¦", 0, 0);
+										//æ£€éªŒç™»å½•å¯†ç æ˜¯å¦æ­£ç¡® msg.getContent()ä¸ºå¯†ç å­—æ®µ
+										if (user.getPassword().equals(msg.getContent())) {/*æ‹¿å–å¯†ç */
+											MsgData msg0 = new MsgData("", "", "ç™»å½•æˆåŠŸ", 0, 0);
 											msg0.setWhat(2);
 											ObjectOutputStream ous = new ObjectOutputStream(Server.clientlist.get(msg.getSendName()).getOutputStream());
 											ous.writeObject(msg0);
 											ous.flush();
-											System.out.println("ÓÃ»§µÇÂ¼³É¹¦");
+											System.out.println("ç”¨æˆ·ç™»å½•æˆåŠŸ");
 										} else {
-											MsgData msg0 = new MsgData("", "", "ÃÜÂë´íÎó", 0, 0);
+											MsgData msg0 = new MsgData("", "", "å¯†ç é”™è¯¯", 0, 0);
 											msg0.setWhat(2);
 											ObjectOutputStream ous = new ObjectOutputStream(Server.clientlist.get(msg.getSendName()).getOutputStream());
 											ous.writeObject(msg0);
 											ous.flush();
-											System.out.println("ÓÃ»§µÇÂ¼Ê§°Ü");
+											System.out.println("ç”¨æˆ·ç™»å½•å¤±è´¥");
 										}
 									}
 									con.close();
 								}
-								// ÏûÏ¢ÀàĞÍÎª3 ÓÃ»§»ñÈ¡ÕË»§ĞÅÏ¢ÈçÍ·Ïñ£¬ºÃÓÑÃû×ÖºÍÍ·Ïñ
+								// æ¶ˆæ¯ç±»å‹ä¸º3 ç”¨æˆ·è·å–è´¦æˆ·ä¿¡æ¯å¦‚å¤´åƒï¼Œå¥½å‹åå­—å’Œå¤´åƒ
 								else if (msg.getWhat() == 3) {
-									//½«ÓÃ»§µÄºÃÓÑĞÅÏ¢ÒÔuserdata¶ÔÏóµÄĞÎÊ½´«Êä
+									//å°†ç”¨æˆ·çš„å¥½å‹ä¿¡æ¯ä»¥userdataå¯¹è±¡çš„å½¢å¼ä¼ è¾“
 									MyConnection con = new MyConnection();
-									System.out.print("³É¹¦½øÈë");
+									System.out.print("æˆåŠŸè¿›å…¥");
 									UserData user = con.getuser(msg.getContent());
 									if (user != null) {
 										ObjectOutputStream ous = new ObjectOutputStream(Server.clientlist.get(msg.getSendName()).getOutputStream());
 										ous.writeObject(user);
 										ous.flush();
-										System.out.println("ÓÃ»§µÇÂ¼³É¹¦");
+										System.out.println("ç”¨æˆ·ç™»å½•æˆåŠŸ");
 									} else {
-										System.out.println("ÓÃ»§µÇÂ¼Ê§°Ü");
+										System.out.println("ç”¨æˆ·ç™»å½•å¤±è´¥");
 									}
 									con.close();
 								}
-								/*ÓÃ»§×¢²áĞÅÏ¢*/
+								/*ç”¨æˆ·æ³¨å†Œä¿¡æ¯*/
 								else if (msg.getWhat() == 4) {
 									MyConnection con = new MyConnection();
-									/*²éÑ¯Êı¾İ¿â»ñÈ¡ÓÃ»§µÄĞÅÏ¢Í¨¹ı´«ËÍµÄĞÅÏ¢µÄName*/
+									/*æŸ¥è¯¢æ•°æ®åº“è·å–ç”¨æˆ·çš„ä¿¡æ¯é€šè¿‡ä¼ é€çš„ä¿¡æ¯çš„Name*/
 									UserData user = con.getuser(msg.getContent());
 									if (user != null) {
-										MsgData msg0 = new MsgData("", "", "ÓÃ»§ÒÑ´æÔÚ", 0, 0);
+										MsgData msg0 = new MsgData("", "", "ç”¨æˆ·å·²å­˜åœ¨", 0, 0);
 										msg0.setWhat(2);
 										ObjectOutputStream ous = new ObjectOutputStream(Server.clientlist.get(msg.getSendName()).getOutputStream());
-										/*·µ»Ø²Ù×÷ĞÅÏ¢*/
+										/*è¿”å›æ“ä½œä¿¡æ¯*/
 										ous.writeObject(msg0);
 										ous.flush();
-										System.out.println("ÓÃ»§×¢²áÊ§°Ü");
+										System.out.println("ç”¨æˆ·æ³¨å†Œå¤±è´¥");
 									} else {
 										/**/
 										con.insertImage(user);
 									}
 									con.close();
 								} else if (msg.getWhat() == 5) {
-									/*»ñÈ¡Ï²»¶µÄÊı¾İ*/
-									System.out.print("ÕıÔÚ»ñÈ¡Ï²»¶µÄÊı¾İ");
+									/*è·å–å–œæ¬¢çš„æ•°æ®*/
+									System.out.print("æ­£åœ¨è·å–å–œæ¬¢çš„æ•°æ®");
 									MyConnection con = new MyConnection();
 
 									SendList ArrayFavority = con.getfavority();
-//								System.out.print("ÕıÔÚ»ñÈ¡Ï²»¶µÄÊı¾İ");
+//								System.out.print("æ­£åœ¨è·å–å–œæ¬¢çš„æ•°æ®");
 									ObjectOutputStream out = new ObjectOutputStream(Server.clientlist.get(msg.getSendName()).getOutputStream());
 									out.writeObject(ArrayFavority);
 									out.flush();
 
-									System.out.print("»ñÈ¡Ï²»¶Êı¾İ³É¹¦");
+									System.out.print("è·å–å–œæ¬¢æ•°æ®æˆåŠŸ");
 									con.close();
 
 								} else if (msg.getWhat() == 6) {
-									/*É¾³ıÏ²»¶Êı¾İ*/
+									/*åˆ é™¤å–œæ¬¢æ•°æ®*/
 									MyConnection con = new MyConnection();
 
 									String result = con.deleteFavorityInfo(msg.getContent());
@@ -213,22 +224,22 @@ public class Server {
 									out.flush();
 									con.close();
 								} else if (msg.getWhat() == 7) {
-									/*»ñÈ¡ÅèÓÑÈ¦¶¯Ì¬*/
+									/*è·å–ç›†å‹åœˆåŠ¨æ€*/
 									MyConnection con = new MyConnection();
 									Carrier_DynamicMessage result = con.queryDynamic_message();
 									ObjectOutputStream out = new ObjectOutputStream(Server.clientlist.get(msg.getSendName()).getOutputStream());
 									out.writeObject(result);
-									System.out.print("»ñÈ¡Ï²»¶ÅèÓÑÈ¦³É¹¦");
+									System.out.print("è·å–å–œæ¬¢ç›†å‹åœˆæˆåŠŸ");
 									out.flush();
 									con.close();
 								} else if (msg.getWhat() == 8) {
-									System.out.print("¿ªÊ¼");
+									System.out.print("å¼€å§‹");
 
 									MyConnection con = new MyConnection();
 									SendRelationship result = con.queryfriend(msg.getSendName());
 									ObjectOutputStream out = new ObjectOutputStream(Server.clientlist.get(msg.getSendName()).getOutputStream());
 									out.writeObject(result);
-									System.out.print("»ñÈ¡ºÃÓÑ³É¹¦");
+									System.out.print("è·å–å¥½å‹æˆåŠŸ");
 									out.flush();
 									con.close();
 								}else if(msg.getWhat() == 9){
@@ -236,45 +247,45 @@ public class Server {
 									SendUserData result = con.queryAlluser();
 									ObjectOutputStream out = new ObjectOutputStream(Server.clientlist.get(msg.getSendName()).getOutputStream());
 									out.writeObject(result);
-									System.out.print("»ñÈ¡ËùÓĞµÄÓÃ»§³É¹¦");
+									System.out.print("è·å–æ‰€æœ‰çš„ç”¨æˆ·æˆåŠŸ");
 									out.flush();
 									con.close();
 								}
 							} else if (ob instanceof UserData) {
-								/*¶ÁÈ¡µÄ¶ÔÏóÊÇUserData*/
-								/*½øĞĞ²åÈë¶ÔÏó*/
+								/*è¯»å–çš„å¯¹è±¡æ˜¯UserData*/
+								/*è¿›è¡Œæ’å…¥å¯¹è±¡*/
 								MyConnection con = new MyConnection();
 								UserData user = (UserData) ob;
 								UserData isExist = con.getuser(user.getEmail());
 								if (Server.clientlist.get(user.getName()) != null) {
-									System.out.println(user.getName() + "Á¬½ÓÒÑ¾­´æÔÚ");
+									System.out.println(user.getName() + "è¿æ¥å·²ç»å­˜åœ¨");
 								} else {
 									Server.clientlist.put(user.getName(), socket);
 								}
 								if (isExist != null) {
 									ObjectOutputStream ous = new ObjectOutputStream(Server.clientlist.get(user.getName()).getOutputStream());
-									ous.writeObject(new MsgData("", "", "ÓÊÏäÒÑ´æÔÚ", 0, 0));
+									ous.writeObject(new MsgData("", "", "é‚®ç®±å·²å­˜åœ¨", 0, 0));
 								} else {
 									con.insertImage(user);
-									MsgData msg0 = new MsgData("", "", "×¢²á³É¹¦", 0, 0);
+									MsgData msg0 = new MsgData("", "", "æ³¨å†ŒæˆåŠŸ", 0, 0);
 									ObjectOutputStream ous = new ObjectOutputStream(Server.clientlist.get(user.getName()).getOutputStream());
 									ous.writeObject(msg0);
 									ous.flush();
-									System.out.print("²åÈë³É¹¦");
+									System.out.print("æ’å…¥æˆåŠŸ");
 								}
 								con.close();
 							} else if (ob instanceof Carrier_FavorityMessage) {
-								/*²åÈëÏ²»¶Êı¾İ*/
+								/*æ’å…¥å–œæ¬¢æ•°æ®*/
 								MyConnection con = new MyConnection();
 								Carrier_FavorityMessage FavInfo = (Carrier_FavorityMessage) ob;
-								/*¿ªÊ¼²åÈë*/
+								/*å¼€å§‹æ’å…¥*/
 								String result = con.InsertFavorityInfo(FavInfo.getFavMeg());
 								ObjectOutputStream out = new ObjectOutputStream(Server.clientlist.get(FavInfo.getSendName()).getOutputStream());
 								out.writeObject(new MsgData(null, null, result, 0, 0));
 								out.flush();
 								con.close();
 							} else if (ob instanceof Carrier_DynamicMessage) {
-								/*²åÈëÅèÓÑÈ¦Êı¾İ*/
+								/*æ’å…¥ç›†å‹åœˆæ•°æ®*/
 								MyConnection con = new MyConnection();
 								Carrier_DynamicMessage DyMsg = (Carrier_DynamicMessage) ob;
 								String result = con.insertDynamic_Message(DyMsg);
@@ -284,7 +295,7 @@ public class Server {
 								con.close();
 							}
 							else if (ob instanceof Relationship){
-								/*²åÈëºÃÓÑ*/
+								/*æ’å…¥å¥½å‹*/
 								MyConnection con = new MyConnection();
 								Relationship DyMsg = (Relationship) ob;
 								System.out.print(DyMsg.getFriendname()+DyMsg.getFriendemail()+DyMsg.getUsername()+DyMsg.getFriendphone());
@@ -307,11 +318,8 @@ public class Server {
             }
         } catch (Exception e) {
 			try {
-
 				Server.clientlist.remove(msg.getSendName());
-				System.out.print(msg.getSendName());
-
-				System.out.print("Á¬½Ó½áÊø");
+				System.out.print(msg.getSendName()+"çš„è¿æ¥ç»“æŸ");
 				socket.close();
 			} catch (IOException ex) {
 				ex.printStackTrace();
