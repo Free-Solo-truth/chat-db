@@ -1,4 +1,4 @@
-package com.wsl.mychat;
+
 
 import com.example.foodrecipes.model.*;
 
@@ -17,8 +17,8 @@ import java.util.List;
 
 public class MyConnection {
 	private Connection conn;
-	/*×¢ÒâÕâÀïµÄuseSSLÊôĞÔµÄÊ¹ÓÃ*/
-	private String url="jdbc:mysql://localhost:3306/chat3?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
+	/*æ³¨æ„è¿™é‡Œçš„useSSLå±æ€§çš„ä½¿ç”¨*/
+	private String url="jdbc:mysql://äº‘æ•°æ®åº“ip:3306/chat3?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
 	private String username="root";
 	private String password="123456";
 	
@@ -56,7 +56,7 @@ public class MyConnection {
 		
 	}
 	
-	//²åÈëÓÃ»§ĞÅÏ¢
+	//æ’å…¥ç”¨æˆ·ä¿¡æ¯
 	public void insertImage(UserData user)
 	{
         PreparedStatement ps = null;
@@ -69,14 +69,15 @@ public class MyConnection {
             ps.setString(2,user.getEmail());
             ps.setString(3, user.getPhone());
             ps.setString(4,user.getPassword());
-            ps.setString(5,"http://8.130.11.202:8080/pictures/1.jpg");
-            /*ÏòÊı¾İ¿âÖ®ÖĞ²åÈëBlobµÄÀàĞÍµÄÊı¾İ*/
+	//åˆå§‹åŒ–å¤´åƒæ•°æ®
+            ps.setString(5,"http://æœåŠ¡å™¨ip:8080/pictures/1.jpg");
+            /*å‘æ•°æ®åº“ä¹‹ä¸­æ’å…¥Blobçš„ç±»å‹çš„æ•°æ®*/
 //            ps.setBinaryStream(5, in, (long)in.available());
             int count = ps.executeUpdate();
             if (count > 0) {
-                System.out.println("²åÈë³É¹¦£¡");
+                System.out.println("æ’å…¥æˆåŠŸï¼");
             } else {
-                System.out.println("²åÈëÊ§°Ü£¡");
+                System.out.println("æ’å…¥å¤±è´¥ï¼");
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +93,7 @@ public class MyConnection {
         
 	}
 
-	//»ñÈ¡ËùÓĞµÄÓÃ»§
+	//è·å–æ‰€æœ‰çš„ç”¨æˆ·
 	public SendUserData queryAlluser()
 	{
 		SendUserData AlluserList = new SendUserData();
@@ -103,8 +104,8 @@ public class MyConnection {
 			String sql = "select * from userid";
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
-			//×¢ÒâÕâÀïµÄÁ´±íµÄÊ¹ÓÃ
-			//ÏòÆäÖĞÌí¼Ó¶ÔÏó±ØĞëÊÇ²»Í¬µÄµØÖ·¿Õ¼ä
+			//æ³¨æ„è¿™é‡Œçš„é“¾è¡¨çš„ä½¿ç”¨
+			//å‘å…¶ä¸­æ·»åŠ å¯¹è±¡å¿…é¡»æ˜¯ä¸åŒçš„åœ°å€ç©ºé—´
 			while (rs.next()){
 				UserData User = new UserData();
 				User.setId(rs.getString(1));
@@ -123,7 +124,7 @@ public class MyConnection {
 		return null;
 	}
 	
-	//¸ü¸ÄÓÃ»§Í·Ïñ
+	//æ›´æ”¹ç”¨æˆ·å¤´åƒ
 	public String updateImage(UpdateUser newUser) {
         PreparedStatement ps = null;
         try {
@@ -133,9 +134,9 @@ public class MyConnection {
             ps.setString(2, newUser.getEmail());
             int count = ps.executeUpdate();
             if (count > 0) {
-                return "Í·Ïñ¸üĞÂ³É¹¦";
+                return "å¤´åƒæ›´æ–°æˆåŠŸ";
             } else {
-				return "Í·Ïñ¸üĞÂÊ§°Ü";
+				return "å¤´åƒæ›´æ–°å¤±è´¥";
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -151,7 +152,7 @@ public class MyConnection {
         return null;
 	}
 	
-	//¸ü¸ÄÓÃ»§ÄØ³Æ
+	//æ›´æ”¹ç”¨æˆ·å‘¢ç§°
 		public void updatename(String username,String name)
 		{
 	        PreparedStatement ps = null;
@@ -162,9 +163,9 @@ public class MyConnection {
 	            ps.setString(2, username);
 	            int count = ps.executeUpdate();
 	            if (count > 0) {
-	                System.out.println("¸üĞÂÄØ³Æ³É¹¦£¡");
+	                System.out.println("æ›´æ–°å‘¢ç§°æˆåŠŸï¼");
 	            } else {
-	                System.out.println("¸üĞÂÄØ³ÆÊ§°Ü£¡");
+	                System.out.println("æ›´æ–°å‘¢ç§°å¤±è´¥ï¼");
 	            }
 	        }catch (Exception e) {
 	            e.printStackTrace();
@@ -180,7 +181,7 @@ public class MyConnection {
 	        
 		}
 	
-	//¶ÁÈ¡ÓÃ»§³ıÕÕÆ¬ËùÓĞĞÅÏ¢ Í¨¹ıemail
+	//è¯»å–ç”¨æˆ·é™¤ç…§ç‰‡æ‰€æœ‰ä¿¡æ¯ é€šè¿‡email
 	public UserData getuser(String email)
 	{
 		UserData user=new UserData();
@@ -212,7 +213,7 @@ public class MyConnection {
 		return null;
 	}
 
-	/*»ñÈ¡ÓÃ»§Ï²»¶*/
+	/*è·å–ç”¨æˆ·å–œæ¬¢*/
 	public SendList getfavority(){
 		SendList favorityMessage = new SendList("litenfei",new ArrayList<OneFavorityMessage>());
 		List<OneFavorityMessage> ArrayfavMes = new ArrayList<OneFavorityMessage>();
@@ -223,8 +224,8 @@ public class MyConnection {
 			ps = conn.prepareStatement(sql);
 			rs = ps.executeQuery();
 
-			//×¢ÒâÕâÀïµÄÁ´±íµÄÊ¹ÓÃ
-			//ÏòÆäÖĞÌí¼Ó¶ÔÏó±ØĞëÊÇ²»Í¬µÄµØÖ·¿Õ¼ä
+			//æ³¨æ„è¿™é‡Œçš„é“¾è¡¨çš„ä½¿ç”¨
+			//å‘å…¶ä¸­æ·»åŠ å¯¹è±¡å¿…é¡»æ˜¯ä¸åŒçš„åœ°å€ç©ºé—´
 			while (rs.next()){
 				OneFavorityMessage favorityMessage1 = new OneFavorityMessage();
 				favorityMessage1.setFavorityimage(rs.getString(2));
@@ -242,7 +243,7 @@ public class MyConnection {
 		}
 		return null;
 	}
-	/*É¾³ıÓÃ»§Ï²»¶Êı¾İ*/
+	/*åˆ é™¤ç”¨æˆ·å–œæ¬¢æ•°æ®*/
 	public String deleteFavorityInfo(String FavorityTitle){
 		PreparedStatement ps = null;
 		System.out.print(FavorityTitle+"\n");
@@ -253,10 +254,10 @@ public class MyConnection {
 			ps.setString(1,FavorityTitle);
 			int rs = ps.executeUpdate();
 			if (rs>0) {
-				result = "È¡Ïû³É¹¦";
+				result = "å–æ¶ˆæˆåŠŸ";
 				System.out.print(result);
 			}else{
-				result = "È¡ÏûÊ§°Ü";
+				result = "å–æ¶ˆå¤±è´¥";
 				System.out.print(result);
 			}
 		}catch (SQLException e){
@@ -264,7 +265,7 @@ public class MyConnection {
 		}
 		return result;
 	}
-	/*²åÈëÓÃ»§Ï²»¶Êı¾İ*/
+	/*æ’å…¥ç”¨æˆ·å–œæ¬¢æ•°æ®*/
 	public String InsertFavorityInfo(OneFavorityMessage FavorityInfo) {
 		String result = null;
 		PreparedStatement ps = null;
@@ -281,10 +282,10 @@ public class MyConnection {
 			ps.setBoolean(6,FavorityInfo.getFavoritytype());
 			int count = ps.executeUpdate();
 			if (count > 0) {
-				result = "²åÈë³É¹¦";
+				result = "æ’å…¥æˆåŠŸ";
 				System.out.println(result);
 			} else {
-				result = "²åÈëÊ§°Ü";
+				result = "æ’å…¥å¤±è´¥";
 				System.out.println(result);
 			}
 		} catch (Exception e) {
@@ -303,7 +304,7 @@ public class MyConnection {
 	}
 	
 	
-	//»ñÈ¡ÓÃ»§Í·ÏñĞÅÏ¢
+	//è·å–ç”¨æˆ·å¤´åƒä¿¡æ¯
 	public Blob getPhoto(String email)
 	{
 		Blob photo=null;
@@ -328,7 +329,7 @@ public class MyConnection {
         
         return null;
 	}
-	/*»ñÈ¡ÓÃ»§·¢²¼¶¯Ì¬*/
+	/*è·å–ç”¨æˆ·å‘å¸ƒåŠ¨æ€*/
 	public Carrier_DynamicMessage queryDynamic_message(){
 		Carrier_DynamicMessage DnyMsg = new Carrier_DynamicMessage("litenfei",new ArrayList<DynamicMessage>());
 		List<DynamicMessage> oneList = new ArrayList<DynamicMessage>();
@@ -354,7 +355,7 @@ public class MyConnection {
 		}
 		return DnyMsg;
 	}
-	/*²åÈëÓÃ»§¶¯Ì¬*/
+	/*æ’å…¥ç”¨æˆ·åŠ¨æ€*/
 	public String insertDynamic_Message(Carrier_DynamicMessage dynamicMessage){
 		String result = null;
 		PreparedStatement ps = null;
@@ -369,10 +370,10 @@ public class MyConnection {
 			ps.setString(4,dynamicMessage.getDynMsg().get(0).getDynamicImage());
 			int count = ps.executeUpdate();
 			if (count > 0) {
-				result = "²åÈë³É¹¦";
+				result = "æ’å…¥æˆåŠŸ";
 				System.out.println(result);
 			} else {
-				result = "²åÈëÊ§°Ü";
+				result = "æ’å…¥å¤±è´¥";
 				System.out.println(result);
 			}
 		} catch (Exception e) {
@@ -389,7 +390,7 @@ public class MyConnection {
 		}
 		return result;
 	}
-	//É¾³ıÓÃ»§
+	//åˆ é™¤ç”¨æˆ·
 	public void deleteuser(String email)
 	{
 		PreparedStatement pstmt=null;
@@ -398,9 +399,9 @@ public class MyConnection {
 			pstmt.setString(1, email);
 			int result=pstmt.executeUpdate();
 			if(result>0)
-				System.out.println("É¾³ıÓÃ»§"+email+"³É¹¦!");
+				System.out.println("åˆ é™¤ç”¨æˆ·"+email+"æˆåŠŸ!");
 			else
-				System.out.println("ÎŞ´ËÓÃ»§!");
+				System.out.println("æ— æ­¤ç”¨æˆ·!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -413,7 +414,7 @@ public class MyConnection {
 		ResultSet rs = null;
 
 		try{
-			ps = conn.prepareStatement("select * from relationship where user_email=?");
+			ps = conn.prepareStatement("select * from Relationship where user_email=?");
 			ps.setString(1,email);
 			rs = ps.executeQuery();
 
@@ -427,7 +428,7 @@ public class MyConnection {
 		}
 		return DnyMsg;
 	}
-	//É¾³ıºÃÓÑ
+	//åˆ é™¤å¥½å‹
 	public void deletefriend(String username,String friendname)
 	{
 		PreparedStatement pstmt=null;
@@ -437,14 +438,14 @@ public class MyConnection {
 			pstmt.setString(2, friendname);
 			int result=pstmt.executeUpdate();
 			if(result>0)
-				System.out.println("É¾³ıºÃÓÑ"+friendname+"³É¹¦!");
+				System.out.println("åˆ é™¤å¥½å‹"+friendname+"æˆåŠŸ!");
 			else
-				System.out.println("ÎŞ´ËºÃÓÑ!");
+				System.out.println("æ— æ­¤å¥½å‹!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	//Ìí¼ÓºÃÓÑ
+	//æ·»åŠ å¥½å‹
 	public String insertfriend(Relationship friend)
 	{
 		System.out.print(friend.getFriendname());
@@ -463,12 +464,12 @@ public class MyConnection {
 			pstmt.setString(8,friend.getUserphoto());
 			int result=pstmt.executeUpdate();
 			if(result>0){
-				System.out.println(username+"Ìí¼ÓºÃÓÑ"+friend.getFriendname()+"³É¹¦!");
-				return "²åÈë³É¹¦";
+				System.out.println(username+"æ·»åŠ å¥½å‹"+friend.getFriendname()+"æˆåŠŸ!");
+				return "æ’å…¥æˆåŠŸ";
 			}
 			else{
-				System.out.println("Ìí¼ÓÊ§°Ü!");
-				return "²åÈëÊ§°Ü";
+				System.out.println("æ·»åŠ å¤±è´¥!");
+				return "æ’å…¥å¤±è´¥";
 			}
 
 		} catch (SQLException e) {
@@ -476,26 +477,83 @@ public class MyConnection {
 		}
 		return null;
 	}
-	//Ìí¼ÓÁÄÌìÏûÏ¢
-	public void addnews(String username,String friendname,String content)
+	//æ·»åŠ èŠå¤©æ¶ˆæ¯
+	public String insertnews(String username,String friendname,String content)
 	{
 		PreparedStatement pstmt=null;
-		try {
-			pstmt=conn.prepareStatement("insert into message(username,friendname,content) values(?,?,?)");
-			pstmt.setString(1, username);
-			pstmt.setString(2, friendname);
-			pstmt.setString(3, content);
-			int result=pstmt.executeUpdate();
-			if(result>0)
-				System.out.println("Ìí¼ÓÏûÏ¢³É¹¦");
-			else
-				System.out.println("Ìí¼ÓÏûÏ¢Ê§°Ü!");
-		} catch (SQLException e) {
-			e.printStackTrace();
+		String context1 = null;
+		try{
+			 context1 = querynews(friendname,username).getContent();
+		}catch(Exception e){
+			context1 = "a";
+	}
+		if(context1=="a"){
+			try {
+				pstmt=conn.prepareStatement("insert into message(username,friendname,content) values(?,?,?)");
+				pstmt.setString(1, username);
+				pstmt.setString(2, friendname);
+				pstmt.setString(3, content);
+				int result=pstmt.executeUpdate();
+				if(result>0)
+					System.out.println("æ·»åŠ æ¶ˆæ¯æˆåŠŸ");
+				else
+					System.out.println("æ·»åŠ æ¶ˆæ¯å¤±è´¥!");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}else{
+			try {
+				String sql = "update message set content=? where username=? and friendname=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1,context1+"-!-"+content);
+				pstmt.setString(2, username);
+				pstmt.setString(3,friendname);
+				int count = pstmt.executeUpdate();
+				if (count > 0) {
+					System.out.println("æ·»åŠ æ¶ˆæ¯æˆåŠŸ");
+				} else {
+					System.out.println("æ·»åŠ æ¶ˆæ¯å¤±è´¥!");
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (null != pstmt) {
+					try {
+						pstmt.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
 		}
+		return null;
+	}
+
+	//æŸ¥è¯¢èŠå¤©ä¿¡æ¯
+	public MsgData querynews(String username,String friendname){
+		MsgData one = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String a = null;
+		try{
+			ps = conn.prepareStatement("select * from message where username=? and friendname=?");
+			ps.setString(1,friendname);
+			ps.setString(2,username);
+			rs = ps.executeQuery();
+
+			while(rs.next()){
+				 a= rs.getString(3);
+				 one = new MsgData(username,friendname,a,3,0);
+			}
+		}catch (Exception e){
+			a = "a";
+			one = new MsgData(username,friendname,a,3,0);
+			return one;
+		}
+		return one;
 	}
 	
-	//É¾³ıÁÄÌìÏûÏ¢
+	//åˆ é™¤èŠå¤©æ¶ˆæ¯
 	public void deletenews(String username,String friendname)
 	{
 		PreparedStatement pstmt=null;
@@ -505,9 +563,9 @@ public class MyConnection {
 			pstmt.setString(2, friendname);
 			int result=pstmt.executeUpdate();
 			if(result>0)
-				System.out.println("É¾³ıÏûÏ¢³É¹¦!");
+				System.out.println("åˆ é™¤æ¶ˆæ¯æˆåŠŸ!");
 			else
-				System.out.println("É¾³ıÏûÏ¢Ê§°Ü!");
+				System.out.println("åˆ é™¤æ¶ˆæ¯å¤±è´¥!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -515,7 +573,7 @@ public class MyConnection {
 	
 	
 	
-	//¸ù¾İÄØ³Æ»ñÈ¡ÓÃ»§id
+	//æ ¹æ®å‘¢ç§°è·å–ç”¨æˆ·id
 	public String getuserid(String name)
 	{
 		ResultSet rs=null;
@@ -543,7 +601,553 @@ public class MyConnection {
             try {
                 conn.close();
             } catch (SQLException e) {
-                System.out.println("¹Ø±ÕÁ¬½ÓÊ§°Ü£¡");
+                System.out.println("å…³é—­è¿æ¥å¤±è´¥ï¼");
+                e.printStackTrace();
+            }
+        }
+    }
+	
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+hat3?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
+	private String username="root";
+	private String password="123456";
+	
+	public MyConnection()
+	{
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn=DriverManager.getConnection(url,username,password);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean searchuser(String username,String password)
+	{
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		try {
+			pstmt=conn.prepareStatement("select * from userid where username=? and password=?");
+			pstmt.setString(1, username);
+			pstmt.setString(2, password);
+			rs=pstmt.executeQuery();
+			if(rs.next())
+			{
+				return true;	
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+		
+	}
+	
+	//æ’å…¥ç”¨æˆ·ä¿¡æ¯
+	public void insertImage(UserData user)
+	{
+        PreparedStatement ps = null;
+        FileInputStream in = null;
+        try {
+//			in = new FileInputStream(user.getPhoto());
+            String sql = "insert into userid (username,email,phone,password,photo) values(?,?,?,?,?)";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, user.getName());
+            ps.setString(2,user.getEmail());
+            ps.setString(3, user.getPhone());
+            ps.setString(4,user.getPassword());
+            ps.setString(5,"http://8.130.11.202:8080/pictures/1.jpg");
+            /*å‘æ•°æ®åº“ä¹‹ä¸­æ’å…¥Blobçš„ç±»å‹çš„æ•°æ®*/
+//            ps.setBinaryStream(5, in, (long)in.available());
+            int count = ps.executeUpdate();
+            if (count > 0) {
+                System.out.println("æ’å…¥æˆåŠŸï¼");
+            } else {
+                System.out.println("æ’å…¥å¤±è´¥ï¼");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != ps) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+	}
+
+	//è·å–æ‰€æœ‰çš„ç”¨æˆ·
+	public SendUserData queryAlluser()
+	{
+		SendUserData AlluserList = new SendUserData();
+		List<UserData> ArrayfavMes = new ArrayList<UserData>();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String sql = "select * from userid";
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			//æ³¨æ„è¿™é‡Œçš„é“¾è¡¨çš„ä½¿ç”¨
+			//å‘å…¶ä¸­æ·»åŠ å¯¹è±¡å¿…é¡»æ˜¯ä¸åŒçš„åœ°å€ç©ºé—´
+			while (rs.next()){
+				UserData User = new UserData();
+				User.setId(rs.getString(1));
+				User.setName(rs.getString(2));
+				User.setEmail(rs.getString(3));
+				User.setPhone(rs.getString(4));
+				User.setPassword(rs.getString(5));
+				User.setPhoto(rs.getString(6));
+				ArrayfavMes.add(User);
+			}
+			AlluserList.setListUserData(ArrayfavMes);
+			return AlluserList;
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	//æ›´æ”¹ç”¨æˆ·å¤´åƒ
+	public String updateImage(UpdateUser newUser) {
+        PreparedStatement ps = null;
+        try {
+            String sql = "update userid set photo=? where email=?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, newUser.getPhoto());
+            ps.setString(2, newUser.getEmail());
+            int count = ps.executeUpdate();
+            if (count > 0) {
+                return "å¤´åƒæ›´æ–°æˆåŠŸ";
+            } else {
+				return "å¤´åƒæ›´æ–°å¤±è´¥";
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != ps) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+	}
+	
+	//æ›´æ”¹ç”¨æˆ·å‘¢ç§°
+		public void updatename(String username,String name)
+		{
+	        PreparedStatement ps = null;
+	        try {
+	            String sql = "update userid set name=? where name =?";
+	            ps = conn.prepareStatement(sql);
+	            ps.setString(1, name);
+	            ps.setString(2, username);
+	            int count = ps.executeUpdate();
+	            if (count > 0) {
+	                System.out.println("æ›´æ–°å‘¢ç§°æˆåŠŸï¼");
+	            } else {
+	                System.out.println("æ›´æ–°å‘¢ç§°å¤±è´¥ï¼");
+	            }
+	        }catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            if (null != ps) {
+	                try {
+	                    ps.close();
+	                } catch (SQLException e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        }
+	        
+		}
+	
+	//è¯»å–ç”¨æˆ·é™¤ç…§ç‰‡æ‰€æœ‰ä¿¡æ¯ é€šè¿‡email
+	public UserData getuser(String email)
+	{
+		UserData user=new UserData();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		
+        try {
+        	String sql = "select * from userid where email =?";
+            ps = conn.prepareStatement(sql);
+			ps.setString(1, email);
+			rs = ps.executeQuery();
+	        
+	        if (rs.next()) {
+	        	user.setId(rs.getString(1));
+	        	user.setName(rs.getString(2));
+	        	user.setEmail(rs.getString(3));
+	        	user.setPhone(rs.getString(4));
+	        	user.setPassword(rs.getString(5));
+	        	user.setPhoto(rs.getString(6));
+//	        	user.setPhoto(ImageUtil.readBin2Image(rs.getBinaryStream("photo"),"F:\\1.jpg"));
+	        	return user;
+	        }
+	        
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/*è·å–ç”¨æˆ·å–œæ¬¢*/
+	public SendList getfavority(){
+		SendList favorityMessage = new SendList("litenfei",new ArrayList<OneFavorityMessage>());
+		List<OneFavorityMessage> ArrayfavMes = new ArrayList<OneFavorityMessage>();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String sql = "select * from favority";
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+
+			//æ³¨æ„è¿™é‡Œçš„é“¾è¡¨çš„ä½¿ç”¨
+			//å‘å…¶ä¸­æ·»åŠ å¯¹è±¡å¿…é¡»æ˜¯ä¸åŒçš„åœ°å€ç©ºé—´
+			while (rs.next()){
+				OneFavorityMessage favorityMessage1 = new OneFavorityMessage();
+				favorityMessage1.setFavorityimage(rs.getString(2));
+				favorityMessage1.setFavoritytitle(rs.getString(3));
+				favorityMessage1.setFavoritysubit(rs.getString(4));
+				favorityMessage1.setFavoritynumber(rs.getInt(5));
+				favorityMessage1.setFavoritytime(rs.getInt(6));
+				favorityMessage1.setFavoritytype(rs.getBoolean(7));
+				ArrayfavMes.add(favorityMessage1);
+			}
+			favorityMessage.setFavMeg(ArrayfavMes);
+			return favorityMessage;
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	/*åˆ é™¤ç”¨æˆ·å–œæ¬¢æ•°æ®*/
+	public String deleteFavorityInfo(String FavorityTitle){
+		PreparedStatement ps = null;
+		System.out.print(FavorityTitle+"\n");
+		String result = null;
+		try{
+			String sql = "delete from favority where favorityTitle=?";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1,FavorityTitle);
+			int rs = ps.executeUpdate();
+			if (rs>0) {
+				result = "å–æ¶ˆæˆåŠŸ";
+				System.out.print(result);
+			}else{
+				result = "å–æ¶ˆå¤±è´¥";
+				System.out.print(result);
+			}
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
+		return result;
+	}
+	/*æ’å…¥ç”¨æˆ·å–œæ¬¢æ•°æ®*/
+	public String InsertFavorityInfo(OneFavorityMessage FavorityInfo) {
+		String result = null;
+		PreparedStatement ps = null;
+		try {
+			String sql = "insert into " +
+					"favority(favorityImage,favorityTitle,favoritySubit,favoritynumber,favoritytime,favoritytype) " +
+					"values(?,?,?,?,?,?)";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1,FavorityInfo.getFavorityimage());
+			ps.setString(2,FavorityInfo.getFavoritytitle());
+			ps.setString(3,FavorityInfo.getFavoritysubit());
+			ps.setInt(4,FavorityInfo.getFavoritynumber());
+			ps.setInt(5,FavorityInfo.getFavoritytime());
+			ps.setBoolean(6,FavorityInfo.getFavoritytype());
+			int count = ps.executeUpdate();
+			if (count > 0) {
+				result = "æ’å…¥æˆåŠŸ";
+				System.out.println(result);
+			} else {
+				result = "æ’å…¥å¤±è´¥";
+				System.out.println(result);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != ps) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+		return result;
+	}
+	
+	
+	//è·å–ç”¨æˆ·å¤´åƒä¿¡æ¯
+	public Blob getPhoto(String email)
+	{
+		Blob photo=null;
+		PreparedStatement ps = null;
+        ResultSet rs = null;
+		
+		
+        try {
+        	String sql = "select photo from userid where email =?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1,email);
+			rs = ps.executeQuery();
+			
+			if (rs.next()) {
+	            photo=(Blob) rs.getBlob(1);
+	            return photo;
+	        }
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        
+        return null;
+	}
+	/*è·å–ç”¨æˆ·å‘å¸ƒåŠ¨æ€*/
+	public Carrier_DynamicMessage queryDynamic_message(){
+		Carrier_DynamicMessage DnyMsg = new Carrier_DynamicMessage("litenfei",new ArrayList<DynamicMessage>());
+		List<DynamicMessage> oneList = new ArrayList<DynamicMessage>();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try{
+			ps = conn.prepareStatement("select * from dynamic_message ");
+			rs = ps.executeQuery();
+
+			while(rs.next()){
+				DynamicMessage one = new DynamicMessage();
+				one.setUserIamge(rs.getString(2));
+				one.setUserName(rs.getString(3));
+				one.setDynamicText(rs.getString(4));
+				one.setDynamicImage(rs.getString(5));
+				oneList.add(one);
+
+			}
+			DnyMsg.setDynMsg(oneList);
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
+		return DnyMsg;
+	}
+	/*æ’å…¥ç”¨æˆ·åŠ¨æ€*/
+	public String insertDynamic_Message(Carrier_DynamicMessage dynamicMessage){
+		String result = null;
+		PreparedStatement ps = null;
+		try {
+			String sql = "insert into " +
+					"dynamic_message(user_image,user_name,dynamic_text,dynamic_image) " +
+					"values(?,?,?,?)";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1,dynamicMessage.getDynMsg().get(0).getUserIamge());
+			ps.setString(2,dynamicMessage.getDynMsg().get(0).getUserName());
+			ps.setString(3,dynamicMessage.getDynMsg().get(0).getDynamicText());
+			ps.setString(4,dynamicMessage.getDynMsg().get(0).getDynamicImage());
+			int count = ps.executeUpdate();
+			if (count > 0) {
+				result = "æ’å…¥æˆåŠŸ";
+				System.out.println(result);
+			} else {
+				result = "æ’å…¥å¤±è´¥";
+				System.out.println(result);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != ps) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+		return result;
+	}
+	//åˆ é™¤ç”¨æˆ·
+	public void deleteuser(String email)
+	{
+		PreparedStatement pstmt=null;
+		try {
+			pstmt=conn.prepareStatement("delete from userid where email =?");
+			pstmt.setString(1, email);
+			int result=pstmt.executeUpdate();
+			if(result>0)
+				System.out.println("åˆ é™¤ç”¨æˆ·"+email+"æˆåŠŸ!");
+			else
+				System.out.println("æ— æ­¤ç”¨æˆ·!");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public SendRelationship queryfriend(String email){
+		SendRelationship DnyMsg = new SendRelationship(email,new ArrayList<Relationship>());
+		List<Relationship> oneList = new ArrayList<Relationship>();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try{
+			ps = conn.prepareStatement("select * from relationship where user_email=?");
+			ps.setString(1,email);
+			rs = ps.executeQuery();
+
+			while(rs.next()){
+				Relationship one = new Relationship(rs.getString(2),rs.getString(3),rs.getString(4));
+				oneList.add(one);
+			}
+			DnyMsg.setListChatPerson(oneList);
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
+		return DnyMsg;
+	}
+	//åˆ é™¤å¥½å‹
+	public void deletefriend(String username,String friendname)
+	{
+		PreparedStatement pstmt=null;
+		try {
+			pstmt=conn.prepareStatement("delete from Relationship where username=? and friendname=?");
+			pstmt.setString(1, username);
+			pstmt.setString(2, friendname);
+			int result=pstmt.executeUpdate();
+			if(result>0)
+				System.out.println("åˆ é™¤å¥½å‹"+friendname+"æˆåŠŸ!");
+			else
+				System.out.println("æ— æ­¤å¥½å‹!");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	//æ·»åŠ å¥½å‹
+	public String insertfriend(Relationship friend)
+	{
+		System.out.print(friend.getFriendname());
+
+		PreparedStatement pstmt=null;
+		try {
+			pstmt=conn.prepareStatement("insert into Relationship(user_email,friend_email,friendname,phone) values(?,?,?,?),(?,?,?,?) ");
+			pstmt.setString(1, friend.getUseremail());
+			pstmt.setString(2, friend.getFriendemail());
+			pstmt.setString(3,friend.getFriendname());
+			pstmt.setString(4,friend.getFriendphone());
+
+			pstmt.setString(5, friend.getFriendemail());
+			pstmt.setString(6, friend.getUseremail());
+			pstmt.setString(7,friend.getUsername());
+			pstmt.setString(8,friend.getUserphoto());
+			int result=pstmt.executeUpdate();
+			if(result>0){
+				System.out.println(username+"æ·»åŠ å¥½å‹"+friend.getFriendname()+"æˆåŠŸ!");
+				return "æ’å…¥æˆåŠŸ";
+			}
+			else{
+				System.out.println("æ·»åŠ å¤±è´¥!");
+				return "æ’å…¥å¤±è´¥";
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	//æ·»åŠ èŠå¤©æ¶ˆæ¯
+	public void addnews(String username,String friendname,String content)
+	{
+		PreparedStatement pstmt=null;
+		try {
+			pstmt=conn.prepareStatement("insert into message(username,friendname,content) values(?,?,?)");
+			pstmt.setString(1, username);
+			pstmt.setString(2, friendname);
+			pstmt.setString(3, content);
+			int result=pstmt.executeUpdate();
+			if(result>0)
+				System.out.println("æ·»åŠ æ¶ˆæ¯æˆåŠŸ");
+			else
+				System.out.println("æ·»åŠ æ¶ˆæ¯å¤±è´¥!");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//åˆ é™¤èŠå¤©æ¶ˆæ¯
+	public void deletenews(String username,String friendname)
+	{
+		PreparedStatement pstmt=null;
+		try {
+			pstmt=conn.prepareStatement("delete from message where username=? and friendname=?");
+			pstmt.setString(1, username);
+			pstmt.setString(2, friendname);
+			int result=pstmt.executeUpdate();
+			if(result>0)
+				System.out.println("åˆ é™¤æ¶ˆæ¯æˆåŠŸ!");
+			else
+				System.out.println("åˆ é™¤æ¶ˆæ¯å¤±è´¥!");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	//æ ¹æ®å‘¢ç§°è·å–ç”¨æˆ·id
+	public String getuserid(String name)
+	{
+		ResultSet rs=null;
+		PreparedStatement pstmt=null;
+		try {
+			pstmt=conn.prepareStatement("select id from userid where name=?");
+			pstmt.setString(1, name);
+			rs=pstmt.executeQuery();
+			if(rs.next())
+				return rs.getString(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	public void close() {
+        if (null != conn) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                System.out.println("å…³é—­è¿æ¥å¤±è´¥ï¼");
                 e.printStackTrace();
             }
         }
